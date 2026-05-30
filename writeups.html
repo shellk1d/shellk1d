@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WriteUps — shellk1d</title>
+  <meta name="description"
+    content="WriteUps de máquinas CTF de HackTheBox y TryHackMe. Técnicas de pentesting, escalada de privilegios y explotación.">
+  <meta name="theme-color" content="#0a0a0a">
+  
+  <!-- OpenGraph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://shellk1d.github.io/writeups.html">
+  <meta property="og:title" content="WriteUps — shellk1d">
+  <meta property="og:description" content="WriteUps de máquinas CTF de HackTheBox y TryHackMe. Técnicas de pentesting, escalada de privilegios y explotación.">
+  <meta property="og:image" content="images/og-image.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://shellk1d.github.io/writeups.html">
+  <meta property="twitter:title" content="WriteUps — shellk1d">
+  <meta property="twitter:description" content="WriteUps de máquinas CTF de HackTheBox y TryHackMe. Técnicas de pentesting, escalada de privilegios y explotación.">
+  <meta property="twitter:image" content="images/og-image.png">
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'></text></svg>">
+</head>
+
+<body>
+  <div id="pageWrapper" class="page-wrapper">
+
+    <div class="page-header">
+      <div class="page-header-inner">
+        <div class="page-header-eyebrow">cat writeups/*.md</div>
+        <h1 class="page-header-title">Write Ups</h1>
+        <p class="page-header-sub">Documentación técnica de máquinas resueltas en plataformas CTF. Análisis de vectores,
+          explotación y escalada.</p>
+      </div>
+    </div>
+
+    <div class="section" style="max-width:1200px; margin:0 auto;">
+
+      <!-- SEARCH -->
+      <div class="search-wrap">
+        <span class="search-icon">⌕</span>
+        <input type="text" id="wuSearch" placeholder="Buscar por nombre, técnica, OS...">
+      </div>
+
+      <!-- FILTERS -->
+      <div style="display:flex; gap:1.5rem; flex-wrap:wrap; margin-bottom:2rem;">
+        <div>
+          <div
+            style="font-family:var(--mono);font-size:0.7rem;color:var(--text-muted);margin-bottom:6px;letter-spacing:0.08em;">
+            PLATAFORMA</div>
+          <div class="filters" id="platformFilter">
+            <button class="filter-btn active" data-filter="all">Todas</button>
+            <button class="filter-btn" data-filter="htb">HackTheBox</button>
+            <button class="filter-btn" data-filter="thm">TryHackMe</button>
+          </div>
+        </div>
+        <div>
+          <div
+            style="font-family:var(--mono);font-size:0.7rem;color:var(--text-muted);margin-bottom:6px;letter-spacing:0.08em;">
+            DIFICULTAD</div>
+          <div class="filters" id="diffFilter">
+            <button class="filter-btn active" data-filter="all">Todas</button>
+            <button class="filter-btn" data-filter="easy">Easy</button>
+            <button class="filter-btn" data-filter="medium">Medium</button>
+            <button class="filter-btn" data-filter="hard">Hard</button>
+            <button class="filter-btn" data-filter="insane">Insane</button>
+          </div>
+        </div>
+        <div>
+          <div
+            style="font-family:var(--mono);font-size:0.7rem;color:var(--text-muted);margin-bottom:6px;letter-spacing:0.08em;">
+            SO</div>
+          <div class="filters" id="osFilter">
+            <button class="filter-btn active" data-filter="all">Todos</button>
+            <button class="filter-btn" data-filter="windows">Windows</button>
+            <button class="filter-btn" data-filter="linux">Linux</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- GRID -->
+      <div class="grid-3" id="writeupsList"></div>
+      <div id="noResults" class="no-results" style="display:none;">
+        <div style="font-size:1.5rem;margin-bottom:0.5rem;">[ 0x0 ]</div>
+        No se encontraron resultados para esa búsqueda.
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="js/content.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      setActivePage('writeups');
+      await renderWriteups('writeupsList');
+
+      // Multi-filter logic
+      const filterGroups = ['platformFilter', 'diffFilter', 'osFilter'];
+      let activeFilters = { platform: 'all', diff: 'all', os: 'all' };
+
+      filterGroups.forEach((gid, i) => {
+        const key = ['platform', 'diff', 'os'][i];
+        const group = document.getElementById(gid);
+        if (!group) return;
+        group.querySelectorAll('.filter-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            group.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeFilters[key] = btn.dataset.filter;
+            applyAll();
+          });
+        });
+      });
+
+      const searchInput = document.getElementById('wuSearch');
+      if (searchInput) searchInput.addEventListener('input', e => { searchTerm = e.target.value.toLowerCase(); applyAll(); });
+
+      let searchTerm = '';
+
+      function applyAll() {
+        const items = document.querySelectorAll('#writeupsList .card');
+        let visible = 0;
+        items.forEach(item => {
+          const matchPlatform = activeFilters.platform === 'all' || item.dataset.platform === activeFilters.platform;
+          const matchDiff = activeFilters.diff === 'all' || item.dataset.difficulty === activeFilters.diff;
+          const matchOs = activeFilters.os === 'all' || item.dataset.os === activeFilters.os;
+          const matchSearch = !searchTerm || (item.dataset.search || '').includes(searchTerm);
+          const show = matchPlatform && matchDiff && matchOs && matchSearch;
+          item.style.display = show ? '' : 'none';
+          if (show) visible++;
+        });
+        const nr = document.getElementById('noResults');
+        if (nr) nr.style.display = visible === 0 ? '' : 'none';
+      }
+    });
+  </script>
+</body>
+
+</html>

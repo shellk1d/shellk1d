@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Herramientas — shellk1d</title>
+  <meta name="description"
+    content="Herramientas de ciberseguridad ofensiva de código abierto para Red Team y pentesting.">
+  <meta name="theme-color" content="#0a0a0a">
+  
+  <!-- OpenGraph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://shellk1d.github.io/tools.html">
+  <meta property="og:title" content="Herramientas — shellk1d">
+  <meta property="og:description" content="Herramientas de ciberseguridad ofensiva de código abierto para Red Team y pentesting.">
+  <meta property="og:image" content="images/og-image.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://shellk1d.github.io/tools.html">
+  <meta property="twitter:title" content="Herramientas — shellk1d">
+  <meta property="twitter:description" content="Herramientas de ciberseguridad ofensiva de código abierto para Red Team y pentesting.">
+  <meta property="twitter:image" content="images/og-image.png">
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'></text></svg>">
+</head>
+
+<body>
+  <div id="pageWrapper" class="page-wrapper">
+
+    <div class="page-header">
+      <div class="page-header-inner">
+        <div class="page-header-eyebrow">ls ~/tools/ --color</div>
+        <h1 class="page-header-title">Herramientas</h1>
+        <p class="page-header-sub">Proyectos de código abierto para operaciones Red Team, recon y automatización de
+          pentesting.</p>
+      </div>
+    </div>
+
+    <div class="section" style="max-width:1200px; margin:0 auto;">
+
+      <div style="display:flex; gap:1rem; flex-wrap:wrap; align-items:flex-start; margin-bottom:2rem;">
+        <div class="search-wrap" style="flex:1; max-width:360px; margin-bottom:0;">
+          <span class="search-icon">⌕</span>
+          <input type="text" id="toolSearch" placeholder="Buscar herramientas...">
+        </div>
+        <div class="filters" id="langFilter">
+          <button class="filter-btn active" data-filter="all">Todos</button>
+          <button class="filter-btn" data-filter="python">Python</button>
+          <button class="filter-btn" data-filter="c++">C/C++</button>
+          <button class="filter-btn" data-filter="go">Go</button>
+        </div>
+      </div>
+
+      <!-- AVISO ÉTICO -->
+      <div class="terminal-block" style="margin-bottom:2rem;">
+        <span class="t-prompt">[!]</span> <span class="t-text">Todas las herramientas publicadas están destinadas
+          exclusivamente a entornos autorizados (laboratorios, CTFs, auditorías con permiso explícito). El uso no
+          autorizado es ilegal y contrario a la ética profesional.</span>
+      </div>
+
+      <div class="grid-3" id="toolsList"></div>
+      <div id="noResults" class="no-results" style="display:none;">
+        <div style="font-size:1.5rem;margin-bottom:0.5rem;">[ 0x0 ]</div>
+        No se encontraron herramientas con ese filtro.
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="js/content.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      setActivePage('tools');
+      await renderTools('toolsList');
+      initFilters('toolsList', 'langFilter', 'toolSearch', '.card', 'lang');
+    });
+  </script>
+</body>
+
+</html>

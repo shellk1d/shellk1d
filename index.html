@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>shellk1d — Red Team Portfolio</title>
+  <meta name="description"
+    content="Portfolio de ciberseguridad ofensiva. WriteUps de CTF, blog y herramientas de Red Team.">
+  <meta name="theme-color" content="#0a0a0a">
+  
+  <!-- OpenGraph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://shellk1d.github.io/">
+  <meta property="og:title" content="shellk1d — Red Team Portfolio">
+  <meta property="og:description" content="Portfolio de ciberseguridad ofensiva. WriteUps de CTF, blog y herramientas de Red Team.">
+  <meta property="og:image" content="images/og-image.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://shellk1d.github.io/">
+  <meta property="twitter:title" content="shellk1d — Red Team Portfolio">
+  <meta property="twitter:description" content="Portfolio de ciberseguridad ofensiva. WriteUps de CTF, blog y herramientas de Red Team.">
+  <meta property="twitter:image" content="images/og-image.png">
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'></text></svg>">
+</head>
+
+<body>
+  <div id="pageWrapper" class="page-wrapper">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-bg">
+        <canvas id="heroCanvas"></canvas>
+      </div>
+      <div class="hero-grid"></div>
+      <div class="hero-content" style="max-width:1200px; margin:0 auto; width:100%;">
+        <div class="hero-eyebrow">Security Researcher · Red Team Operator</div>
+        <h1 class="hero-name">
+          <span class="accent" data-profile="alias">shellk1d</span>
+        </h1>
+        <div class="hero-tagline">
+          <span id="typedTagline" data-text="Red Team · Pentesting · CTF · Malware Dev"></span>
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat-item">
+            <span class="stat-num" data-stat="blog">4</span>
+            <span class="stat-label">Entradas<br>de Blog</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num" data-stat="writeups">6</span>
+            <span class="stat-label">Write<br>Ups</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num" data-stat="tools">5</span>
+            <span class="stat-label">Herramientas<br>publicadas</span>
+          </div>
+        </div>
+
+        <div class="hero-actions">
+          <a href="writeups.html" class="btn btn-primary">Ver WriteUps</a>
+          <a href="blog.html" class="btn btn-outline">Blog →</a>
+        </div>
+
+        <div style="margin-top:3rem;" id="socialLinks"></div>
+      </div>
+    </section>
+
+    <!-- RECENT WRITEUPS -->
+    <div style="max-width:1200px; margin:0 auto;">
+      <div class="section reveal">
+        <div class="section-header">
+          <span class="section-num">01</span>
+          <h2 class="section-title">Últimos WriteUps</h2>
+          <span class="section-line"></span>
+          <a href="writeups.html" class="section-link">Ver todos →</a>
+        </div>
+        <div class="grid-3" id="homeWriteups"></div>
+      </div>
+
+      <!-- BLOG PREVIEW -->
+      <div class="section reveal" style="padding-top:0;">
+        <div class="section-header">
+          <span class="section-num">02</span>
+          <h2 class="section-title">Blog</h2>
+          <span class="section-line"></span>
+          <a href="blog.html" class="section-link">Ver todos →</a>
+        </div>
+        <div class="grid-2" id="homeBlog"></div>
+      </div>
+
+      <!-- TOOLS PREVIEW -->
+      <div class="section reveal" style="padding-top:0;">
+        <div class="section-header">
+          <span class="section-num">03</span>
+          <h2 class="section-title">Herramientas</h2>
+          <span class="section-line"></span>
+          <a href="tools.html" class="section-link">Ver todas →</a>
+        </div>
+        <div class="grid-3" id="homeTools"></div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="js/content.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      setActivePage('home');
+      renderWriteups('homeWriteups', 3);
+      renderBlog('homeBlog', 2);
+      renderTools('homeTools', 3);
+    });
+  </script>
+</body>
+
+</html>
