@@ -201,6 +201,7 @@ function animateValue(obj, start, end, duration) {
 // ── LOAD PROFILE ──
 async function loadProfile() {
   const data = await loadData();
+  const p = data.profile;
 
   // Calcular el número real de items a partir de los arrays de datos
   const blogCount = data.blog ? data.blog.length : 0;
