@@ -36,6 +36,8 @@ function difficultyTag(diff) {
 function platformTag(p) {
   if (p === 'HackTheBox') return `<span class="tag tag-htb">HackTheBox</span>`;
   if (p === 'TryHackMe') return `<span class="tag tag-thm">TryHackMe</span>`;
+  if (p === 'Lakera') return `<span class="tag tag-lk">Lakera</span>`;
+  if (p === 'DockerLabs') return `<span class="tag tag-dl">DockerLabs</span>`;
   return `<span class="tag">${p}</span>`;
 }
 
@@ -115,7 +117,7 @@ async function renderWriteups(containerId, limit = null) {
   container.innerHTML = items.map(w => `
     <a href="${w.url}" class="card writeup-card"
        data-difficulty="${w.difficulty.toLowerCase()}"
-       data-platform="${w.platform === 'HackTheBox' ? 'htb' : 'thm'}"
+       data-platform="${{ 'HackTheBox': 'htb', 'TryHackMe': 'thm', 'DockerLabs': 'dl', 'Lakera' : 'lk'}[w.platform] || 'unknown'}"
        data-os="${w.os.toLowerCase()}"
        data-search="${(w.title + ' ' + w.tags.join(' ') + ' ' + w.os + ' ' + w.platform).toLowerCase()}">
       <div class="writeup-platform">
