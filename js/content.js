@@ -9,7 +9,24 @@ const PORTFOLIO_DATA = {
       "tryhackme": "https://tryhackme.com/p/shellk1d"
     }
   },
-  "writeups": [],
+  "writeups": [
+    {
+      "id": "1",
+      "title": "Gandalf",
+      "platform": "Lakera",
+      "os": "LLM",
+      "difficulty": "Medium",
+      "tags": [
+        "AI",
+        "Prompt Injection",
+        "Prompt Engineering",
+        "Chatbot"
+      ],
+      "date": "2026-06-02",
+      "description": "Superando las defensas del chatbot Gandalf aplicando diferentes métodos de Promp Injection",
+      "url": "writeups-html/gandalf-ai.html"
+    }
+  ],
   "blog": [
     {
       "id": "1",
@@ -23,7 +40,7 @@ const PORTFOLIO_DATA = {
         "IA"
       ],
       "excerpt": "Dando un vistazo a algunas de las técnicas más comunes para romper la seguridad de los Grandes Modelos Lingüísticos (LLM).",
-      "url": "https://shellk1d.github.io/shellk1d/blog-html/jailbreak-ai.html"
+      "url": "blog-html/jailbreak-ai.html"
     }
   ],
   "tools": []
