@@ -23,22 +23,8 @@ const PORTFOLIO_DATA = {
         "IA"
       ],
       "excerpt": "Dando un vistazo a algunas de las técnicas más comunes para romper la seguridad de los Grandes Modelos Lingüísticos (LLM).",
-      "url": "blog-html/jailbreak-ai.html"
+      "url": "https://shellk1d.github.io/shellk1d/blog-html/jailbreak-ai.html"
     }
   ],
-  "tools": [
-    // {
-    //   "id": "1",
-    //   "name": "exampleTool.py",
-    //   "description": "This is an example for the tools section.",
-    //   "tags": [
-    //     "Python",
-    //     "Active Directory",
-    //     "LDAP",
-    //     "Recon"
-    //   ],
-    //   "github": "https://github.com/shellk1d/example",
-    //   "language": "Python"
-    // }
-  ]
+  "tools": []
 };
