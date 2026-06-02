@@ -9,50 +9,36 @@ const PORTFOLIO_DATA = {
       "tryhackme": "https://tryhackme.com/p/shellk1d"
     }
   },
-  "writeups": [
-    {
-      "id": "1",
-      "title": "Forest",
-      "platform": "HackTheBox",
-      "os": "Windows",
-      "difficulty": "Easy",
-      "tags": [
-        "Active Directory",
-        "Kerberoasting",
-        "AS-REP Roasting",
-        "BloodHound"
-      ],
-      "date": "2026-05-30",
-      "description": "Explotación de Active Directory mediante AS-REP Roasting y escalada de privilegios abusando de permisos DCSync.",
-      "url": "writeups-html/forest.html"
-    }
-  ],
+  "writeups": [],
   "blog": [
     {
       "id": "1",
-      "title": "Por qué el Red Team no es solo \"hacer hacking\"",
-      "date": "2026-05-30",
-      "category": "Opinión",
+      "title": "Técnicas de Jailbreak y Prompt Injection en los LLM",
+      "date": "2026-06-01",
+      "category": "Técnico",
       "tags": [
-        "Red Team"
+        "Prompt Engineering",
+        "Prompt Injection",
+        "LLM",
+        "IA"
       ],
-      "excerpt": "El Red Team va mucho más allá de explotar vulnerabilidades. Es un ejercicio de inteligencia táctica, paciencia y pensamiento adversarial.",
-      "url": "blog-html/redteam-opinion.html"
+      "excerpt": "Dando un vistazo a algunas de las técnicas más comunes para romper la seguridad de los Grandes Modelos Lingüísticos (LLM).",
+      "url": "blog-html/jailbreak-ai.html"
     }
   ],
   "tools": [
-    {
-      "id": "1",
-      "name": "exampleTool.py",
-      "description": "This is an example for the tools section.",
-      "tags": [
-        "Python",
-        "Active Directory",
-        "LDAP",
-        "Recon"
-      ],
-       "github": "https://github.com/shellk1d/example",
-       "language": "Python"
-    }
+    // {
+    //   "id": "1",
+    //   "name": "exampleTool.py",
+    //   "description": "This is an example for the tools section.",
+    //   "tags": [
+    //     "Python",
+    //     "Active Directory",
+    //     "LDAP",
+    //     "Recon"
+    //   ],
+    //   "github": "https://github.com/shellk1d/example",
+    //   "language": "Python"
+    // }
   ]
 };
