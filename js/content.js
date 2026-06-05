@@ -2,7 +2,7 @@
 const PORTFOLIO_DATA = {
   "profile": {
     "alias": "shellk1d",
-    "tagline": "Red Team · Pentesting · CTF · Malware Dev",
+    "tagline": "Red Team · Pentesting · CTF · Malware Analyst",
     "social": {
       "github": "https://github.com/shellk1d",
       "hackthebox": "https://profile.hackthebox.com/profile/019dae9e-6a36-716b-909e-b8c994f474cd",
