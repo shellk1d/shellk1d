@@ -43,5 +43,18 @@ const PORTFOLIO_DATA = {
       "url": "blog-html/jailbreak-ai.html"
     }
   ],
-  "tools": []
+  "tools": [
+    {
+      "id": "1",
+      "name": "bash-script-colors",
+      "description": "En esta utilidad te enseño a utilizar la paleta de colores que creé para mis scripts en bash.",
+      "tags": [
+        "Bash",
+        "Scripting",
+        "Linux"
+      ],
+      "github": "https://github.com/shellk1d/bash-script-colors",
+      "language": "Bash"
+    }
+  ]
 };
